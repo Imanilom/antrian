@@ -4,9 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\Queue;
+use App\Models\Poli;
 
 class QueueController extends Controller
 {
+
+    public function history(Request $request)
+    {
+        // Ambil semua data antrian yang sudah selesai atau dipanggil
+        $queues = Queue::whereIn('status', ['called', 'done'])
+            ->orderBy('updated_at', 'desc') // Urutkan berdasarkan waktu terakhir update
+            ->get();
+
+        return view('queue.history', compact('queues'));
+    }
+    
     // Tampilan 1 - Pilihan Loket
     public function selectLoket()
     {
@@ -23,33 +36,34 @@ class QueueController extends Controller
     // Ambil Antrian
     public function ambilAntrian($loket)
     {
-        // Ambil antrian dari session
-        $queues = session('queues', []);
+        $poli = Poli::where('code', $loket)->firstOrFail();
 
-        // Jika belum ada antrian untuk loket ini, inisialisasi
-        if (!isset($queues[$loket])) {
-            $queues[$loket] = [
-                'waiting' => [],
-                'current' => null,
-            ];
+        $currentTime = Carbon::now()->format('H:i');
+        if ($poli->start_time && $poli->end_time) {
+            if ($currentTime < $poli->start_time || $currentTime > $poli->end_time) {
+                return back()->with('error', 'Poli ini sedang tidak aktif.');
+            }
         }
 
-        // Tambah nomor antrian
-        $number = count($queues[$loket]['waiting']) + 1;
-        $code = $loket . '-' . $number;
+        if (!$poli || !$poli->is_active) {
+            return redirect()->back()->with('error', 'Loket tidak aktif.');
+        }
 
-        $queues[$loket]['waiting'][] = [
+        $lastQueue = Queue::where('loket', $loket)->latest('number')->first();
+        $number = $lastQueue ? $lastQueue->number + 1 : 1;
+
+        if ($poli->queue_limit && $number > $poli->queue_limit) {
+            return redirect()->back()->with('error', 'Batas antrian tercapai.');
+        }
+
+        $queue = Queue::create([
+            'loket' => $loket,
             'number' => $number,
-            'code' => $code,
+            'code' => $loket . '-' . $number,
             'status' => 'waiting',
-            'time' => Carbon::now()->format('H:i:s'),
-        ];
+        ]);
 
-        // Simpan kembali ke session
-        session(['queues' => $queues]);
-
-        // Tampilkan tiket antrian
-        return view('queue.ticket', ['code' => $code]);
+        return view('queue.ticket', ['code' => $queue->code]);
     }
 
     // Tampilan 2 - Dashboard Loket

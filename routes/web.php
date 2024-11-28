@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QueueController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\PoliController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,6 +18,7 @@ use App\Http\Controllers\QueueController;
 
 // Tampilan 1 - Pilihan Loket
 Route::get('/', [QueueController::class, 'selectLoket'])->name('queue.selectLoket');
+Route::get('/', [QueueController::class, 'selectLoket'])->name('home');
 Route::post('/ambil-antrian/{loket}', [QueueController::class, 'ambilAntrian'])->name('queue.ambilAntrian');
 
 // Tampilan 2 - Dashboard Staf Loket
@@ -23,3 +27,21 @@ Route::post('/loket/{loket}/call', [QueueController::class, 'callQueue'])->name(
 Route::post('/loket/{loket}/done/{number}', [QueueController::class, 'doneQueue'])->name('queue.doneQueue');
 
 Route::get('/queue/{loket}/status', [QueueController::class, 'getQueueStatus']);
+
+Route::get('/riwayat-antrian', [QueueController::class, 'history'])->name('queue.history');
+
+// Login for admin only
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login'); // Menampilkan form login
+Route::post('/login', [LoginController::class, 'login']); // Memproses form login
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// admin only
+Route::middleware(['auth'])->group(function () {
+    Route::get('polis', [PoliController::class, 'index'])->name('polis.index');
+    Route::get('polis/create', [PoliController::class, 'create'])->name('polis.create');
+    Route::post('polis', [PoliController::class, 'store'])->name('polis.store');
+    Route::get('polis/{poli}/edit', [PoliController::class, 'edit'])->name('polis.edit');
+    Route::put('polis/{poli}', [PoliController::class, 'update'])->name('polis.update');
+    Route::delete('polis/{poli}', [PoliController::class, 'destroy'])->name('polis.destroy');
+
+});

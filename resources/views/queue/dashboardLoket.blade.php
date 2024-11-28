@@ -18,7 +18,9 @@
     </style>
 </head>
 <body>
+   
 <div class="container mt-5">
+ 
     <h1>Dashboard Loket {{ $loket }}</h1>
 
     @if($queue['current'])
