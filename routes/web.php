@@ -21,7 +21,9 @@ Route::get('/', [QueueController::class, 'selectLoket'])->name('queue.selectLoke
 
 Route::get('/', [QueueController::class, 'selectLoket'])->name('home');
 Route::post('/ambil-antrian/{loket}', [QueueController::class, 'ambilAntrian'])->name('queue.ambilAntrian');
-Route::get('/ambil-antrian/{loket}', [QueueController::class, 'ambilAntrian'])->name('queue.ambilAntrian');
+Route::get('/ambil-antrian/{loketCode}', [QueueController::class, 'ambilAntrian'])->name('queue.ambilAntrian');
+Route::get('/print-tiket/{queueId}', [QueueController::class, 'printTicket'])->name('queue.printTiket');
+
 
 // Tampilan 2 - Dashboard Staf Loket
 Route::get('/loket/{loket}', [QueueController::class, 'dashboardLoket'])->name('queue.dashboardLoket');
