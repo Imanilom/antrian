@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,6 +14,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UserSeeder::class);
+        User::create([
+            'name' => 'Admin',
+            'email' => 'admin@klinik.com',
+            'password' => Hash::make('password123'), // Ganti dengan password yang kuat
+        ]);
     }
 }
