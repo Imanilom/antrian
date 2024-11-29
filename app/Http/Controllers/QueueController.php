@@ -11,23 +11,29 @@ class QueueController extends Controller
 {
 
 
-    public function printTicket($loket)
-    {
-        // Ambil data antrian yang baru saja dibuat
-        $lastQueue = Queue::where('loket', $loket)->orderBy('id', 'desc')->first();
+public function printTicket($loket)
+{
+    // Ambil data antrian yang baru saja dibuat
+    $lastQueue = Queue::where('loket', $loket)->orderBy('id', 'desc')->first();
 
-        // Pastikan antrian ditemukan
-        if ($lastQueue) {
-            // Muat view untuk tiket dan kirim data antrian
-            $pdf = PDF::loadView('queue.ticket', compact('lastQueue'));
+    // Pastikan antrian ditemukan
+    if ($lastQueue) {
+        // Muat view untuk tiket dan kirim data antrian
+        $pdf = PDF::loadView('queue.ticket', compact('lastQueue'));
 
-            // Simpan PDF atau langsung unduh
-            return $pdf->download('ticket-' . $lastQueue->code . '.pdf');
-        }
-
-        // Jika antrian tidak ditemukan
-        return redirect()->back()->with('error', 'Antrian tidak ditemukan.');
+        // Simpan PDF atau langsung unduh
+        $pdfName = 'ticket-' . $lastQueue->code . '.pdf';
+        return response()->json([
+            'success' => true,
+            'pdf_url' => route('download.ticket', $pdfName), // URL untuk mengunduh tiket
+            'queue_number' => $lastQueue->number,
+            'loket' => $lastQueue->loket,
+        ]);
     }
+
+    // Jika antrian tidak ditemukan
+    return response()->json(['success' => false, 'message' => 'Antrian tidak ditemukan.']);
+}
 
     public function history()
     {

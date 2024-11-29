@@ -16,7 +16,12 @@ class PoliController extends Controller
 
     public function create()
     {
-        return view('poli.create');
+        // Ambil semua kode poli yang sudah ada
+        $existingCodes = Poli::pluck('code')->map(function($code) {
+            return $code[0]; // Ambil huruf pertama dari setiap kode
+        })->toArray();
+
+        return view('poli.create', compact('existingCodes'));
     }
 
     public function store(Request $request)
@@ -41,11 +46,15 @@ class PoliController extends Controller
     
         return redirect()->route('polis.index')->with('success', 'Poli berhasil ditambahkan.');
     }
-    
 
     public function edit(Poli $poli)
     {
-        return view('poli.edit', compact('poli'));
+        // Ambil semua kode poli yang sudah ada, kecuali kode yang sedang diedit
+        $existingCodes = Poli::where('id', '!=', $poli->id)->pluck('code')->map(function($code) {
+            return $code[0]; // Ambil huruf pertama dari setiap kode
+        })->toArray();
+
+        return view('poli.edit', compact('poli', 'existingCodes'));
     }
 
     public function update(Request $request, Poli $poli)
@@ -70,7 +79,6 @@ class PoliController extends Controller
     
         return redirect()->route('polis.index')->with('success', 'Poli berhasil diperbarui.');
     }
-    
 
     public function destroy(Poli $poli)
     {

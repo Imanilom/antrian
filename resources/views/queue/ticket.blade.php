@@ -5,34 +5,28 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-lg-6">
-                <div class="card shadow-sm">
+                <div class="card shadow-sm print-area" id="ticket">
                     <div class="card-header text-center">
-                        <!-- Tambahkan logo klinik -->
                         <img src="{{ asset('assets/img/logo ITB.png') }}" alt="Logo ITB" class="logo-print mb-2" style="width: 100px; height: auto;">
                         <h3 class="mb-0" style="font-weight: bold;"><strong>UPT Klinik Bumi Medika ITB</strong></h3>
                         <h4 class="mb-0" style="font-size: 12px;">Jl. Gelap Nyawang No.2, Lb. Siliwangi</h4>
-
-                        
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title" style="font-size: 1.5rem;">Loket: <span class="text-primary">{{ $queue->loket }}</span></h5>
+                        <h5 class="card-title" style="font-size: 1.5rem;">Poli: <span class="text-primary">{{ $queue->loket }}</span></h5>
                         <p class="card-text" style="font-size: 1.5rem;">Nomor Antrian: <span class="font-weight-bold">{{ $queue->number }}</span></p>
                         <p class="card-text" style="font-size: 3.0rem;">Kode: <span class="font-weight-bold">{{ $queue->code }}</span></p>
                         <p class="card-text" style="font-size: 1.5rem;">Status: <span class="{{ $queue->status == 'waiting' ? 'text-warning' : 'text-success' }}">
                             {{ ucfirst($queue->status) }}</span></p>
                     </div>
-                    
-                    <!-- Tombol kembali disembunyikan saat mencetak -->
-                    <div class="card-footer text-center print-hidden">
-                        <a href="{{ route('home') }}" class="btn btn-secondary">Kembali</a>
-                        <button onclick="window.print()" class="btn btn-primary">Cetak</button>
+                    <div class="card-footer text-center">
+                        <a href="{{ route('home') }}" class="btn btn-secondary" id="back-button">Kembali</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-@endsection
+
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -40,69 +34,53 @@
         margin: 0;
         padding: 0;
     }
-    .ticket-container {
-        border: 2px dashed #000;
-        padding: 20px;
-        width: 300px;
-        margin: 50px auto;
-    }
-    .queue-number {
-        font-size: 50px;
-        font-weight: bold;
-        margin: 10px 0;
-    }
-    .loket {
-        font-size: 20px;
-        margin-top: 10px;
-    }
-</style>
 
-@section('css')
-<style>
-    /* Menyesuaikan ukuran untuk cetakan termal */
+    /* Style untuk cetakan */
     @media print {
-        .print-area {
-            width: 7cm;
-            height: 16cm;
-            font-size: 12px; /* Sesuaikan ukuran font jika diperlukan */
-        }
         body {
-            margin: 0;
-            font-size: 12px;
+            margin: 0; /* Menghilangkan margin body saat cetak */
+            padding: 0; /* Menghilangkan padding body saat cetak */
         }
-        .card {
-            width: 80mm; /* Ukuran standar thermal printer */
-            border: none;
-            margin: 0 auto;
+
+        body * {
+            visibility: hidden; /* Sembunyikan semua elemen */
         }
-        .card-header {
-            font-size: 16px;
-            font-weight: bold;
-            padding: 5px;
-            text-align: center;
+
+        #ticket, #ticket * {
+            visibility: visible; /* Tampilkan hanya elemen tiket */
         }
-        .card-body {
-            text-align: center;
-            padding: 5px;
+
+        #ticket {
+            position: absolute; /* Mengatur posisi tiket untuk cetak */
+            left: 0;
+            top: 0;
+            width: 7cm; /* Pastikan lebar tiket sesuai ukuran kertas */
+            height: 16cm; /* Pastikan tinggi tiket sesuai ukuran kertas */
+            margin: 0; /* Tanpa margin */
         }
-        .card-title {
-            font-size: 14px;
+
+        #back-button {
+            display: none; /* Sembunyikan tombol "Kembali" saat mencetak */
         }
-        .card-text {
-            margin: 3px 0;
-            font-size: 12px;
-        }
-        .logo-print {
-            display: block;
-            margin: 0 auto;
-            width: 5cm; /* Atur lebar logo */
-            height: auto; /* Otomatis menjaga proporsi */
-        }
-        .print-hidden {
-            display: none;
+
+        @page {
+            size: 7cm 16cm; /* Ukuran kertas: 7 cm lebar, 16 cm tinggi */
+            margin: 0; /* Tanpa margin */
         }
     }
-
 </style>
+
+<script>
+    // Fungsi untuk mencetak tiket secara otomatis
+    function autoPrint() {
+        window.print(); // Panggil fungsi print
+        setTimeout(() => {
+            window.close(); // Tutup jendela setelah 1 detik
+        }, 1000);
+    }
+
+    // Panggil fungsi autoPrint saat halaman dimuat
+    window.onload = autoPrint;
+</script>
 
 @endsection
