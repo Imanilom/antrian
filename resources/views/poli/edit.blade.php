@@ -30,6 +30,7 @@
                 <label for="end_time">Jam Tutup</label>
                 <input type="time" name="end_time" id="end_time" class="form-control" value="{{ $poli->end_time }}">
             </div>
+            
             <div class="form-check">
                 <input type="checkbox" name="is_active" id="is_active" class="form-check-input" value="1" {{ $poli->is_active ? 'checked' : '' }}>
                 <label for="is_active" class="form-check-label">Aktif</label>

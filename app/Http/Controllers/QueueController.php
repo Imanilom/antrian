@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Queue;
 use App\Models\Poli;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class QueueController extends Controller
 {
