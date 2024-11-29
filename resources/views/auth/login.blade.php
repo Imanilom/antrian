@@ -27,11 +27,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="card-footer text-center">
-                        <small>
-                            <a href="{{ route('password.request') }}">Forgot your password?</a>
-                        </small>
-                    </div>
+                   
                 </div>
             </div>
         </div>
