@@ -2,7 +2,7 @@
     <div class="branding d-flex align-items-center">
         <div class="container position-relative d-flex align-items-center justify-content-between">
             <a href="{{ route('home') }}" class="logo d-flex align-items-center me-auto">
-                <h1 class="sitename">Medilab</h1>
+                <h1 class="sitename">UPT Klinik Bumi Medika ITB</h1>
             </a>
 
             <nav id="navmenu" class="navmenu">
