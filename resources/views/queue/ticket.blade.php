@@ -12,9 +12,9 @@
                         <h4 class="mb-0" style="font-size: 12px;">Jl. Gelap Nyawang No.2, Lb. Siliwangi</h4>
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title" style="font-size: 1.5rem;">Poli: <span class="text-primary">{{ $queue->loket }}</span></h5>
+                        <h5 class="card-title" style="font-size: 1.5rem;">Poli: <span class="font-weight-vold">{{ $loketName }}</span></h5>
                         <p class="card-text" style="font-size: 1.5rem;">Nomor Antrian: <span class="font-weight-bold">{{ $queue->number }}</span></p>
-                        <p class="card-text" style="font-size: 3.0rem;">Kode: <span class="font-weight-bold">{{ $queue->code }}</span></p>
+                        <p class="card-text" style="font-size: 1.5rem;">Kode: <span class="font-weight-bold">{{ $queue->code }}</span></p>
                         <p class="card-text" style="font-size: 1.5rem;">Status: <span class="{{ $queue->status == 'waiting' ? 'text-warning' : 'text-success' }}">
                             {{ ucfirst($queue->status) }}</span></p>
                     </div>

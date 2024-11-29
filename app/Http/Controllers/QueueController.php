@@ -18,8 +18,14 @@ public function printTicket($loket)
 
     // Pastikan antrian ditemukan
     if ($lastQueue) {
+        // Ambil nama poli berdasarkan kode loket
+        $loketName = Poli::where('kode', $loket)->value('name');
+
         // Muat view untuk tiket dan kirim data antrian
-        $pdf = PDF::loadView('queue.ticket', compact('lastQueue'));
+        $pdf = PDF::loadView('queue.ticket', [
+            'queue' => $lastQueue,
+            'loketName' => $loketName,
+        ]);
 
         // Simpan PDF atau langsung unduh
         $pdfName = 'ticket-' . $lastQueue->code . '.pdf';
@@ -27,7 +33,7 @@ public function printTicket($loket)
             'success' => true,
             'pdf_url' => route('download.ticket', $pdfName), // URL untuk mengunduh tiket
             'queue_number' => $lastQueue->number,
-            'loket' => $lastQueue->loket,
+            'loket' => $loketName,
         ]);
     }
 
@@ -54,7 +60,17 @@ public function printTicket($loket)
 
     // Ambil nomor antrian baru
     public function ambilAntrian($loket)
-    {
+    { // Menentukan nama poli berdasarkan loket
+        $loketName = '';
+        if ($loket == 'G') {
+            $loketName = 'Poli Gigi';  // Loket G untuk Poli Gigi
+        } elseif ($loket == 'M') {
+            $loketName = 'Poli Mata';  // Loket M untuk Poli Mata
+        } else {
+            // Jika loket tidak dikenali, tampilkan pesan default
+            $loketName = 'Poli Tidak Dikenal';
+        }
+        
         $lastQueue = Queue::where('loket', $loket)->orderBy('id', 'desc')->first();
         $nextNumber = $lastQueue ? intval($lastQueue->number) + 1 : 1;
         $nextCode = $loket . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
@@ -66,7 +82,8 @@ public function printTicket($loket)
             'status' => 'waiting',
         ]);
 
-        return view('queue.ticket', compact('queue'));
+    // Mengirimkan data queue dan loketName ke view
+        return view('queue.ticket', compact('queue','loketName'));
     }
 
     // Menampilkan dashboard loket

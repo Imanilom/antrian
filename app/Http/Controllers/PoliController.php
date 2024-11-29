@@ -47,38 +47,39 @@ class PoliController extends Controller
         return redirect()->route('polis.index')->with('success', 'Poli berhasil ditambahkan.');
     }
 
+    
     public function edit(Poli $poli)
-    {
-        // Ambil semua kode poli yang sudah ada, kecuali kode yang sedang diedit
-        $existingCodes = Poli::where('id', '!=', $poli->id)->pluck('code')->map(function($code) {
-            return $code[0]; // Ambil huruf pertama dari setiap kode
-        })->toArray();
+{
+    $existingCodes = Poli::pluck('code')->toArray(); // Ambil semua kode poli yang sudah ada
 
-        return view('poli.edit', compact('poli', 'existingCodes'));
-    }
+    return view('poli.edit', [
+        'poli' => $poli,
+        'existingCodes' => $existingCodes,
+    ]);
+}
 
-    public function update(Request $request, Poli $poli)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'officer' => 'required|string|max:255',
-            'code' => 'required|string|max:10|unique:polis,code,' . $poli->id,
-            'start_time' => 'nullable|date_format:H:i',
-            'end_time' => 'nullable|date_format:H:i',
-        ]);
-    
-        $poli->update([
-            'name' => $request->name,
-            'code' => $request->code,
-            'officer' => $request->officer,
-            'queue_limit' => $request->queue_limit,
-            'is_active' => $request->has('is_active'),
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
-        ]);
-    
-        return redirect()->route('polis.index')->with('success', 'Poli berhasil diperbarui.');
-    }
+public function update(Request $request, Poli $poli)
+{
+    // Validasi data dari form
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'alphabet' => 'required|string|max:1', // Huruf A-Z
+        'officer' => 'required|string|max:255',
+        'queue_limit' => 'nullable|integer|min:0',
+        'start_time' => 'nullable|date_format:H:i',
+        'end_time' => 'nullable|date_format:H:i',
+        'is_active' => 'nullable|boolean',
+    ]);
+
+    // Gabungkan kode poli (alphabet + queue_limit jika ada)
+    $validated['code'] = $request->alphabet . '-' . ($request->queue_limit ?? 0);
+
+    // Update data poli
+    $poli->update($validated);
+
+    // Redirect ke halaman daftar poli dengan pesan sukses
+    return redirect()->route('polis.index')->with('success', 'Data poli berhasil diperbarui.');
+}
 
     public function destroy(Poli $poli)
     {

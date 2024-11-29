@@ -15,7 +15,7 @@
             <div class="form-group">
                 <label for="code">Kode Poli</label>
                 <select id="alphabet" name="alphabet" class="form-select" required>
-                    <!-- Opsi huruf A-Z tanpa opsi kosong -->
+                    <!-- Pilihan huruf A-Z -->
                 </select>
                 <input type="hidden" name="code" id="code" value="{{ $poli->code }}" required>
             </div>
@@ -50,10 +50,10 @@
     </div>
 
     <script>
-        // Membuat array huruf A sampai Z
-        const letters = Array.from(Array(26), (e, i) => String.fromCharCode(i + 65));
+        // Membuat opsi huruf A-Z untuk select
+        const letters = Array.from(Array(26), (_, i) => String.fromCharCode(i + 65));
 
-        // Menggunakan forEach untuk menambahkan huruf ke dalam elemen select
+        // Tambahkan opsi huruf ke select
         letters.forEach(letter => {
             const option = document.createElement('option');
             option.value = letter;
@@ -61,26 +61,19 @@
             document.getElementById('alphabet').appendChild(option);
         });
 
-        // Mengatur huruf yang sudah ada dalam kode poli
+        // Pilih huruf yang sesuai dengan kode poli saat ini
         const currentCode = "{{ $poli->code }}";
         if (currentCode.length > 0) {
-            const selectedLetter = currentCode.charAt(0);
+            const selectedLetter = currentCode.charAt(0); // Huruf pertama
             document.getElementById('alphabet').value = selectedLetter;
         }
 
-        // Fungsi untuk memeriksa huruf yang sudah ada
-        function checkExistingCodes(existingCodes) {
-            const select = document.getElementById('alphabet');
-            for (let i = 0; i < select.options.length; i++) {
-                const optionValue = select.options[i].value;
-                if (existingCodes.includes(optionValue)) {
-                    select.options[i].disabled = true; // Nonaktifkan opsi yang sudah ada
-                }
-            }
-        }
-
-        // Ambil daftar kode yang sudah ada, misalnya dari server
-        const existingCodes = @json($existingCodes ?? []); // Pastikan $existingCodes didefinisikan di controller
-        checkExistingCodes(existingCodes);
+        // Nonaktifkan huruf yang sudah digunakan
+        const existingCodes = @json($existingCodes ?? []);
+        existingCodes.forEach(code => {
+            const usedLetter = code.charAt(0);
+            const option = document.querySelector(`#alphabet option[value="${usedLetter}"]`);
+            if (option) option.disabled = true;
+        });
     </script>
 @endsection

@@ -40,12 +40,14 @@ Route::post('/login', [LoginController::class, 'login']); // Memproses form logi
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // admin only
+
 Route::middleware(['auth'])->group(function () {
     Route::get('polis', [PoliController::class, 'index'])->name('polis.index');
     Route::get('polis/create', [PoliController::class, 'create'])->name('polis.create');
     Route::post('polis', [PoliController::class, 'store'])->name('polis.store');
-    Route::get('polis/{poli}/edit', [PoliController::class, 'edit'])->name('polis.edit');
-    Route::put('polis/{poli}', [PoliController::class, 'update'])->name('polis.update');
+    Route::get('polis/{poli}/edit', [PoliController::class, 'edit'])->name('polis.edit'); // Route edit
+    Route::put('polis/{poli}', [PoliController::class, 'update'])->name('polis.update'); // Route update
     Route::delete('polis/{poli}', [PoliController::class, 'destroy'])->name('polis.destroy');
-
 });
+
+
