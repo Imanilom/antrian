@@ -141,7 +141,9 @@ public function printTicket($loket)
         if (count($parts) == 2) {
             $loket = strtoupper($parts[0]); // Ambil huruf loket
             $number = intval($parts[1]);   // Ambil angka sebagai integer
-
+            // Dapatkan nama poli berdasarkan kode loket
+            $loketName = Poli::where('kode', $loket)->value('name');
+            
             $audioFiles[] = asset("audio/simple_notification.wav");
             // Bagian 2: Tambahkan file audio untuk "Nomor Antrian"
             $audioFiles[] = asset("audio/antrian.wav");
@@ -153,7 +155,7 @@ public function printTicket($loket)
             $audioFiles = array_merge($audioFiles, $this->parseNumberToAudio($number));
 
             // Tambahkan audio untuk "di konter"
-            $audioFiles[] = asset("audio/counter.wav");
+            $audioFiles[] = asset("audio/di_ruangan.wav");
 
             // Tambahkan audio untuk huruf loket (contoh: "O")
             $audioFiles[] = asset("audio/{$loket}.wav");
