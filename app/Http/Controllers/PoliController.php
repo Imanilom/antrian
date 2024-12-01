@@ -69,16 +69,22 @@ public function update(Request $request, Poli $poli)
         'start_time' => 'nullable|date_format:H:i',
         'end_time' => 'nullable|date_format:H:i',
         'is_active' => 'nullable|boolean',
+        // Validasi kode poli, kecuali untuk yang sedang diedit
+        'code' => 'required|string|max:10|unique:polis,code,' . $poli->id,
     ]);
 
     // Gabungkan kode poli (alphabet + queue_limit jika ada)
     $validated['code'] = $request->alphabet . '-' . ($request->queue_limit ?? 0);
 
     // Update data poli
-    $poli->update($validated);
-
-    // Redirect ke halaman daftar poli dengan pesan sukses
-    return redirect()->route('polis.index')->with('success', 'Data poli berhasil diperbarui.');
+    try {
+        $poli->update($validated);
+        // Redirect ke halaman daftar poli dengan pesan sukses
+        return redirect()->route('polis.index')->with('success', 'Data poli berhasil diperbarui.');
+    } catch (\Exception $e) {
+        // Tangani kesalahan (jika ada)
+        return redirect()->route('polis.index')->with('error', 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage());
+    }
 }
 
     public function destroy(Poli $poli)
