@@ -40,8 +40,9 @@
             </div>
 
             <div class="form-check">
-                <input type="checkbox" name="is_active" id="is_active" class="form-check-input" value="1" checked>
-                <label for="is_active" class="form-check-label">Aktif</label>
+                <input type="checkbox" name="is_active" id="is_active" class="form-check-input" value="1"
+                    {{ old('is_active', $poli->is_active) ? 'checked' : '' }}>
+                <label class="form-check-label" for="is_active">Aktif</label>
             </div>
 
             <button type="submit" class="btn btn-primary mt-3">Simpan</button>

@@ -61,9 +61,10 @@
 # General Styling & Shared Classes
 --------------------------------------------------------------*/
 body {
-  color: var(--default-color);
-  background-color: var(--background-color);
-  font-family: var(--default-font);
+  background-image: url('../img/hero-bg.jpg'); /* Ganti dengan path ke gambar Anda */
+  background-size: cover; /* Mengatur agar gambar menutupi seluruh area */
+  background-position: center; /* Memusatkan gambar */
+  background-repeat: no-repeat; /* Menghindari pengulangan gambar */
 }
 
 a {

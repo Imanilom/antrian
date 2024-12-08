@@ -10,6 +10,6 @@ class Poli extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'code', 'officer', 'queue_limit', 'is_active', 'start_time', 'end_time'
+        'name', 'code', 'officer','is_active', 'queue_limit', 'start_time', 'end_time'
     ];
 }

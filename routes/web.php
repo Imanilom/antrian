@@ -18,7 +18,6 @@ use App\Http\Controllers\PoliController;
 
 // Tampilan 1 - Pilihan Loket
 Route::get('/', [QueueController::class, 'selectLoket'])->name('queue.selectLoket');
-
 Route::get('/', [QueueController::class, 'selectLoket'])->name('home');
 Route::post('/ambil-antrian/{loket}', [QueueController::class, 'ambilAntrian'])->name('queue.ambilAntrian');
 Route::get('/ambil-antrian/{loketCode}', [QueueController::class, 'ambilAntrian'])->name('queue.ambilAntrian');

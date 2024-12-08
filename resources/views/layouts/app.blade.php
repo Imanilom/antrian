@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'My App')</title>
+    <title>@yield('title', 'UPT Layanan Kesehatan')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet"> <!-- Custom CSS jika ada -->
+    <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet"><!-- Custom CSS jika ada -->
     
     <!-- Favicons -->
     <link href="{{ asset('assets/img/favicon.png') }}" rel="icon">
@@ -26,6 +26,14 @@
 
     <!-- Main CSS File -->
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
+    <style>
+    body {
+      background-image: "{{ url('../img/hero-bg.jpg')}} "; /* Ganti dengan path ke gambar Anda */
+      background-size: cover; /* Mengatur agar gambar menutupi seluruh area */
+      background-position: center; /* Memusatkan gambar */
+      background-repeat: no-repeat; /* Menghindari pengulangan gambar */
+    }
+    </style>
 </head>
 <body>
 

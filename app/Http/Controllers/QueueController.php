@@ -154,12 +154,9 @@ public function printTicket($loket)
             // Parse angka menjadi file audio (contoh: "002" → "dua")
             $audioFiles = array_merge($audioFiles, $this->parseNumberToAudio($number));
 
-            // Tambahkan audio untuk "di konter"
-            $audioFiles[] = asset("audio/counter.wav");
-
-            // Tambahkan audio untuk huruf loket (contoh: "O")
-            $audioFiles[] = asset("audio/{$loket}.wav");
-            $audioFiles[] = asset("audio/simple_notification.wav");
+            // Tambahkan audio untuk "di ruangan"
+            $audioFiles[] = asset("audio/ruangan.wav");
+        
         }
 
         return $audioFiles;
